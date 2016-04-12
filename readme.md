@@ -11,3 +11,7 @@ Documentation for Socialite can be found on the [Laravel website](http://laravel
 ### License
 
 Laravel Socialite is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+
+## Tenant
+
+This version handles multiple tenants
