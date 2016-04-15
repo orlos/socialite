@@ -11,14 +11,18 @@ use League\OAuth1\Client\Server\Bitbucket as BitbucketServer;
 
 class SocialiteManager extends Manager implements Contracts\Factory
 {
+    private $config = null;
     /**
      * Get a driver instance.
      *
      * @param  string  $driver
      * @return mixed
      */
-    public function with($driver)
+    public function with($driver,$app = null)
     {
+        if ( $app ){
+            $this->config = json_decode($app->config,true);
+        }
         return $this->driver($driver);
     }
 
@@ -29,7 +33,11 @@ class SocialiteManager extends Manager implements Contracts\Factory
      */
     protected function createGithubDriver()
     {
-        $config = $this->app['config']['services.github'];
+        if ( $this->config ) {
+            $config = $this->config['config']['services.github'];
+        } else {
+            $config = $this->app['config']['services.github'];
+        }
 
         return $this->buildProvider(
             'Laravel\Socialite\Two\GithubProvider', $config
@@ -43,7 +51,11 @@ class SocialiteManager extends Manager implements Contracts\Factory
      */
     protected function createFacebookDriver()
     {
-        $config = $this->app['config']['services.facebook'];
+        if ( $this->config ) {
+            $config = $this->config['config']['services.facebook'];
+        } else {
+            $config = $this->app['config']['services.facebook'];
+        }
 
         return $this->buildProvider(
             'Laravel\Socialite\Two\FacebookProvider', $config
@@ -57,7 +69,11 @@ class SocialiteManager extends Manager implements Contracts\Factory
      */
     protected function createGoogleDriver()
     {
-        $config = $this->app['config']['services.google'];
+        if ( $this->config ) {
+            $config = $this->config['config']['services.google'];
+        } else {
+            $config = $this->app['config']['services.google'];
+        }
 
         return $this->buildProvider(
             'Laravel\Socialite\Two\GoogleProvider', $config
@@ -100,7 +116,11 @@ class SocialiteManager extends Manager implements Contracts\Factory
      */
     protected function createTwitterDriver()
     {
-        $config = $this->app['config']['services.twitter'];
+        if ( $this->config ) {
+            $config = $this->config['config']['services.twitter'];
+        } else {
+            $config = $this->app['config']['services.twitter'];
+        }
 
         return new TwitterProvider(
             $this->app['request'], new TwitterServer($this->formatConfig($config))
@@ -122,18 +142,18 @@ class SocialiteManager extends Manager implements Contracts\Factory
     }
 
     /**
-     * Format the Twitter server configuration.
+     * Format the server configuration.
      *
      * @param  array  $config
      * @return array
      */
     public function formatConfig(array $config)
     {
-        return [
+        return array_merge([
             'identifier' => $config['client_id'],
             'secret' => $config['client_secret'],
             'callback_uri' => $config['redirect'],
-        ];
+        ], $config);
     }
 
     /**
