@@ -714,7 +714,7 @@ class InstagramProvider extends AbstractProvider implements ProviderInterface
    * @return void
    */
   public function setAccessToken($data) {
-    print_r($data);
+    //print_r($data);
 
     (true === is_object($data)) ? $token = $data->access_token : $token = $data;
     $this->_accesstoken = $token;
